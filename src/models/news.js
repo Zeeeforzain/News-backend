@@ -4,11 +4,10 @@ const newsSchema = new mongoose.Schema({
   heading: {
     type: String,
     required: [true, "Heading is required"],
-    minlength: [10, "Title must be at least 3 characters long"],
+    minlength: [10, "Heading must be at least 10 characters long"],
     unique: false, 
     validate: {
       validator: function (value) {
-        // Allow letters, spaces, and some punctuation marks (like hyphen and period)
         return /^[A-Za-z\s\-.]+$/.test(value);
       },
       message: "Heading should contain only letters, spaces, hyphens, or periods",
@@ -41,15 +40,13 @@ const newsSchema = new mongoose.Schema({
       },
   },
   tags: {
-    type: [String], // Stored as an array of strings
+    type: [String],
     required: [true, "Tags are required"],
     set: function(value) {
-      // Splits the string by commas and trims each tag
       return value.split(',').map(tag => tag.trim());
     },
     validate: {
       validator: function(value) {
-        // Checks each tag to ensure only letters and spaces
         return value.every(tag => /^[A-Za-z\s]+$/.test(tag));
       },
       message: "Each tag should contain only letters and spaces",
@@ -72,7 +69,6 @@ const newsSchema = new mongoose.Schema({
       required: [true, "Image URL is required"],
       validate: {
         validator: function(value) {
-          // Simple URL validation (optional but recommended)
           return /^(https?:\/\/.*\.(?:png|jpg|jpeg|gif|svg))(\?.*)?$/i.test(value);
         },
         message: "Please provide a valid image URL",
