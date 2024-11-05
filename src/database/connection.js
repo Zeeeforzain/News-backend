@@ -1,12 +1,9 @@
-// src/database/connection.js
 const mongoose = require("mongoose");
 
-// Ensure you load your environment variables
-require("dotenv").config(); // This should be here to load MONGO_URI
+require("dotenv").config(); 
 
 const connectDB = async () => {
     try {
-        // Connect using the environment variable for the MongoDB URI
         await mongoose.connect(process.env.MONGO_URI, {
         });
         console.log("MongoDB connected successfully");
