@@ -1,9 +1,9 @@
 
 const express = require('express');
 const router = express.Router();
-const adminController = require('../controllers/adminController');
-const newsController = require('../controllers/newsControllers');
-const { authenticateAdmin } = require('../controllers/adminController');
+const adminController = require('../../controllers/admin/admin.controller');
+const newsController = require('../../controllers/admin/news.controller');
+const { authenticateAdmin } = require('../../controllers/admin/admin.controller');
 
 // Admin registration route
 router.post('/admin/register', adminController.registerAdmin);

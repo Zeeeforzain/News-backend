@@ -1,5 +1,5 @@
 
-const News = require("../models/news");
+const News = require("../../models/admin/news.model");
 
 exports.createNews = async (req, res) => {
     try {

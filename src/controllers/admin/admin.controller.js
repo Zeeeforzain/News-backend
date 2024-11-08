@@ -1,5 +1,5 @@
 
-const Admin = require('../models/admin');
+const Admin = require('../../models/admin/admin.model');
 const jwt = require('jsonwebtoken');
 const SECRET_KEY = process.env.JWT_SECRET || 'your-secret-key';
 

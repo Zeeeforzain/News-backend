@@ -1,7 +1,7 @@
 
 const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
-
+import { Schema, model, ObjectId } from 'mongoose';
 const adminSchema = new mongoose.Schema({
     email: {
         type: String,
