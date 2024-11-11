@@ -2,8 +2,8 @@
 const express = require('express');
 const PORT = process.env.PORT || 3000;
 const connectDB = require('./src/database/connection');
-const newsRoutes = require('./src/routes/newsRoutes');
-const adminRoutes = require('./src/routes/adminRoutes');
+const newsRoutes = require('./src/routes/admin/news.routes');
+const adminRoutes = require('./src/routes/admin/admin.routes');
 
 const app = express();
 app.use(express.json());
