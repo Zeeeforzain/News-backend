@@ -1,6 +1,4 @@
 import { NextFunction } from 'express';
-
-import { isValidObjectId } from 'mongoose';
 import category from '../../models/category';
 
 export const isCategoryValid = async (
@@ -10,31 +8,26 @@ export const isCategoryValid = async (
 ) => {
 	try {         
 		const { categoryId } = req.params;
-		
+		const categoryExists = await category.countDocuments({ _id: categoryId });
 
-		if (!isValidObjectId(categoryId)) {
+		if (!categoryExists) {
 			return sendResponse(res, {
-				statusCode: 500,
+				statusCode: 404,
 				success: false,
-				message: 'Invlaid categoryID.',
+				message: 'Category not found.',
 				data: {},
 			});
 		}
 
-		const categoryDetails = await category.countDocuments(
-			{
-				_id: categoryId,
-			},
-		);
 		next();
 	} catch (err: any) {
 		saveErrorLog({
 			endpoint: req.originalUrl,
-			params: Object.assign({
+			params: {
 				urlParams: req.params,
 				queryParams: req.query,
 				bodyParams: req.body,
-			}),
+			},
 			errDetails: err,
 			userId: null,
 			adminId: req.user ? req.user._id : null,

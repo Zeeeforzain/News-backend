@@ -1,5 +1,5 @@
 import Joi, { ObjectSchema} from 'joi';
-
+import { JoiObjectId } from '../util/utilities';
 const PASSWORD_REGEX = new RegExp(
 	'^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!.@#$%^&*]){12}'
 );
@@ -15,7 +15,7 @@ const createNews = Joi.object().keys({
 	countryId: Joi.string().trim().lowercase().empty().email().required(),
 	city: Joi.string().max(100).required(),
     tags:Joi.string().required().trim().empty(),
-    categoryId:Joi.string().required().trim().empty(),
+    categoryId:JoiObjectId().required().trim().empty(),
 });
 
 export default {
