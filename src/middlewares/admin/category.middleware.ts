@@ -1,6 +1,7 @@
 import { NextFunction } from 'express';
 
 import { isValidObjectId } from 'mongoose';
+import category from '../../models/category';
 
 export const isCategoryValid = async (
 	req: any,
@@ -8,41 +9,23 @@ export const isCategoryValid = async (
 	next: NextFunction
 ) => {
 	try {         
-		const { newsId } = req.params;
+		const { categoryId } = req.params;
 		
 
-		if (!isValidObjectId(newsId)) {
+		if (!isValidObjectId(categoryId)) {
 			return sendResponse(res, {
 				statusCode: 500,
 				success: false,
-				message: 'Invlaid newsID.',
+				message: 'Invlaid categoryID.',
 				data: {},
 			});
 		}
 
-		const userDetails = await User.countDocuments(
+		const categoryDetails = await category.countDocuments(
 			{
-				_id: newsId,
+				_id: categoryId,
 			},
 		);
-
-		if (!userDetails) {
-			return sendResponse(res, {
-				statusCode: 500,
-				success: false,
-				message: 'News not found.',
-				data: {},
-			});
-		}
-
-		if (!userDetails.category || !userDetails.category) {
-			return sendResponse(res, { 
-				statusCode: 500,
-				success: false,
-				message: 'News not found.',
-				data: {},
-			});}
-
 		next();
 	} catch (err: any) {
 		saveErrorLog({

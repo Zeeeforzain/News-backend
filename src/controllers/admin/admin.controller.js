@@ -1,4 +1,4 @@
-const Admin = require('../../models/admin/admin.model');
+const Admin = require('../../models/admin.model');
 const jwt = require('jsonwebtoken');
 const SECRET_KEY = process.env.JWT_SECRET || 'your-secret-key';// Assuming you have a utility for consistent responses
 const validator = require('../../validators/schemas'); // Assuming you have a validator object

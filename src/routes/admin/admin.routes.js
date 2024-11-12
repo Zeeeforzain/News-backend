@@ -4,7 +4,7 @@ const adminController = require('../../controllers/admin/admin.controller');
 const newsController = require('../../controllers/admin/news.controller');
 const { authenticateAdmin } = require('../../controllers/admin/admin.controller');
 const { isCategoryValid } = require('../../middlewares/admin/category'); // Correct path for middleware
-const { validate } = require('../../middlewares/validator'); // Correct path for validator
+const { validate } = require('../../middlewares/admin/category.middleware'); // Correct path for validator
 
 // Admin registration route
 router.post('/admin/register', validate('/admin/signup'), adminController.registerAdmin);
