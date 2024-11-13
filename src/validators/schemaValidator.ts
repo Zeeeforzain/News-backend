@@ -1,90 +1,43 @@
-import { NextFunction } from 'express';
+import { Request, Response, NextFunction } from 'express';
+import schemas from './schemas.js';
+import { sendResponse } from '../util/utilities.js';
 
-import { isValidObjectId } from 'mongoose';
-import { saveErrorLog, sendResponse } from '../util/utilities';
+const supportedMethods = ['post', 'put', 'patch', 'delete'];
 
-export const isUserBankInfoPending = async (
-	req: any,
-	res: any,
-	next: NextFunction
-) => {
-	try {
-		const { userId } = req.params;
-		const { status } = req.body;
-
-		if (!isValidObjectId(userId)) {
-			return sendResponse(res, {
-				statusCode: 500,
-				success: false,
-				message: 'Invlaid userId.',
-				data: {},
-			});
-		}
-
-		const userDetails = await User.countDocuments(
-			{
-				_id: userId,
-			},
-		);
-
-		if (!userDetails) {
-			return sendResponse(res, {
-				statusCode: 500,
-				success: false,
-				message: 'User not found.',
-				data: {},
-			});
-		}
-
-		if (!userDetails.bankInfo || !userDetails.bankInfo.countryId) {
-			return sendResponse(res, { 
-				statusCode: 500,
-				success: false,
-				message: 'User bank info not found.',
-				data: {},
-			});
-		}
-
-		if (status === 'active' && userDetails.bankInfo.status === 'active') {
-			return sendResponse(res, {
-				statusCode: 500,
-				success: false,
-				message: 'User bank info is already approved.',
-				data: {},
-			});
-		}
-
-		if (
-			status === 'rejected' &&
-			userDetails.bankInfo.status === 'rejected'
-		) {
-			return sendResponse(res, {
-				statusCode: 500,
-				success: false,
-				message: 'User bank info is already rejected.',
-				data: {},
-			});
-		}
-
-		next();
-	} catch (err: any) {
-		saveErrorLog({
-			endpoint: req.originalUrl,
-			params: Object.assign({
-				urlParams: req.params,
-				queryParams: req.query,
-				bodyParams: req.body,
-			}),
-			errDetails: err,
-			userId: null,
-			adminId: req.user ? req.user._id : null,
-		});
-
-		return sendResponse(res, {
-			statusCode: 500,
-			success: false,
-			message: 'Error occurred. Please try again later.',
-			data: {},
-		});
-	}
+const validationOptions = {
+	abortEarly: false,
+	allowUnknown: false,
+	stripUnknown: false,
 };
+
+const schemaValidator = (path: string) => {
+	const schema = schemas[path];
+
+	if (!schema) {
+		throw new Error(`Schema not found for path: ${path}`);
+	}
+
+	return (req: Request, res: Response, next: NextFunction) => {
+		const method = req.method.toLowerCase();
+
+		if (!supportedMethods.includes(method)) {
+			return next();
+		}
+
+		const { error, value } = schema.validate(req.body, validationOptions);
+		if (error) {
+			return sendResponse(res, {
+				statusCode: 400,
+				success: false,
+				message: error?.details[0].message,
+				data: {},
+			});
+		}
+
+		// validation successful
+		req.body = value;
+		return next();
+	};
+};
+
+export default schemaValidator;

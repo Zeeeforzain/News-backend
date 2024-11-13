@@ -1,23 +1,59 @@
 const express = require('express');
 const router = express.Router();
+
+// Import controllers
 const adminController = require('../../controllers/admin/admin.controller');
 const newsController = require('../../controllers/admin/news.controller');
-const { authenticateAdmin } = require('../../controllers/admin/admin.controller');
-const { isCategoryValid } = require('../../middlewares/admin/category'); // Correct path for middleware
-const { validate } = require('../../middlewares/admin/category.middleware'); // Correct path for validator
+
+// Import middleware
+const auth= require("../../middlewares/admin/auth.middleware") // Ensure the path and file name are correct
+const { isCategoryValid } = require('../../middlewares/admin/category.middleware');
+const { schemaValidator } = require('../../validators/schemaValidator'); // Ensure schemaValidator works with provided paths
 
 // Admin registration route
-router.post('/admin/register', validate('/admin/signup'), adminController.registerAdmin);
+router.post(
+    '/admin/register',
+    schemaValidator('/admin/signup'), // Checks the request body against the signup schema
+    adminController.registerAdmin
+);
 
 // Admin login route
-router.post('/admin/login', validate('/admin/signup'), adminController.loginAdmin);
+router.post(
+    '/admin/login',
+    schemaValidator('/admin/login'), // Checks the request body against the login schema
+    adminController.loginAdmin
+);
 
-// Protected Routes for Admin (only accessible by admins)
-router.post('/news', authenticateAdmin, validate('/news/create'), newsController.createNews);
-router.put('/news/:id', authenticateAdmin, validate('/news/create'), newsController.updateNews);
-router.delete('/news/:id', authenticateAdmin, newsController.deleteNews);
+// Protected Routes for Admin (only accessible by authenticated admins)
+// Create news
+router.post(
+    '/news',
+    auth, // Requires authentication
+    schemaValidator('/news/create'), // Checks the request body against the news creation schema
+    newsController.createNews
+);
 
-// Route with category validation
-router.put('/news/category/:newsId', authenticateAdmin, isCategoryValid, newsController.updateCategory);
+// Update news by ID
+router.put(
+    '/news/:id',
+    auth, // Requires authentication
+    schemaValidator('/news/update'), // Checks the request body against the news update schema
+    newsController.updateNews
+);
+
+// Delete news by ID
+router.delete(
+    '/news/:id',
+    auth, // Requires authentication
+    newsController.deleteNews
+);
+
+// Update news category (with additional category validation)
+router.put(
+    '/news/category/:newsId',
+    auth, // Requires authentication
+    isCategoryValid, // Validates that the category is valid before proceeding
+    newsController.updateCategory
+);
 
 module.exports = router;

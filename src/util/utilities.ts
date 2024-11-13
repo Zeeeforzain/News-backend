@@ -2,7 +2,7 @@ import { ObjectId, Types } from 'mongoose';
 import Joi from 'joi';
 import ErrorLog from '../models/errorlog';
 import { Response } from 'express';
-
+import jsonwebtoken from 'jsonwebtoken';
 
 interface IResponsePayload {
 	statusCode: number;
@@ -68,3 +68,10 @@ export const saveErrorLog = async (payload: {
 		paymentId: payload.paymentId,
 	}).save();
 };
+
+export const verifyJWTToken = (token: string) => {
+	return jsonwebtoken.verify(
+		token.split(' ')[1],
+		process.env.JWT_SECRET || ''
+	);
+}
