@@ -1,8 +1,7 @@
 import { NextFunction } from 'express';
 
-import User from '../../models/user.js';
 import { isValidObjectId } from 'mongoose';
-import { saveErrorLog } from '../common/errorLog.middleware.js';
+import { saveErrorLog, sendResponse } from '../util/utilities';
 
 export const isUserBankInfoPending = async (
 	req: any,

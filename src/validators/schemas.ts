@@ -12,7 +12,7 @@ const adminSignup = Joi.object().keys({
 const createNews = Joi.object().keys({
 	heading: Joi.string().required().trim().empty(),
 	description: Joi.string().required().trim().empty(),
-	countryId: Joi.string().trim().lowercase().empty().email().required(),
+	countryId: JoiObjectId().trim().lowercase().empty().email().required(),
 	city: Joi.string().max(100).required(),
     tags:Joi.string().required().trim().empty(),
     categoryId:JoiObjectId().required().trim().empty(),
