@@ -8,7 +8,7 @@ const newsController = require('../../controllers/admin/news.controller');
 // Import middleware
 const auth= require("../../middlewares/admin/auth.middleware") // Ensure the path and file name are correct
 const { isCategoryValid } = require('../../middlewares/admin/category.middleware');
-const { schemaValidator } = require('../../validators/schemaValidator'); // Ensure schemaValidator works with provided paths
+const schemaValidator = require('../../validators/schemaValidator'); // Ensure schemaValidator works with provided paths
 
 // Admin registration route
 router.post(

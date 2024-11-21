@@ -3,11 +3,10 @@ const { Types } = require('mongoose');
 const ErrorLog = require('../models/errorlog');
 const jsonwebtoken = require('jsonwebtoken');
 
-// Helper function to validate ObjectId
 const JoiObjectId = (message = 'valid id') =>
   Joi.string().regex(/^[0-9a-fA-F]{24}$/, message);
 
-// Helper function to compare two objects
+
 const objectsEqual = (o1, o2) => {
   let isEqual = false;
 
@@ -67,7 +66,6 @@ const verifyJWTToken = (token) => {
   );
 };
 
-// Exporting all utility functions
 module.exports = {
   JoiObjectId,
   objectsEqual,
